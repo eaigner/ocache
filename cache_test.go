@@ -7,18 +7,25 @@ import (
 var oc = New("127.0.0.1:11211")
 
 func TestSimple(t *testing.T) {
-	v := "asdf"
+	type s struct {
+		A string
+		B int
+	}
+	v := s{"a", 6}
 	k := "key1"
 
 	if err := oc.Set(&v, 0, k); err != nil {
 		t.Fatal(err)
 	}
 
-	var v2 string
+	var v2 s
 	if err := oc.Get(&v2, k); err != nil {
 		t.Fatal(err)
 	}
-	if v != v2 {
+	if v.A != v2.A {
+		t.Fatal(v2)
+	}
+	if v.B != v2.B {
 		t.Fatal(v2)
 	}
 
@@ -26,11 +33,11 @@ func TestSimple(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var v3 string
+	var v3 s
 	if err := oc.Get(&v3, k); err == nil {
 		t.Fatal("should report error")
 	}
-	if v3 != "" {
+	if v3.A != "" {
 		t.Fatal(v3)
 	}
 }
